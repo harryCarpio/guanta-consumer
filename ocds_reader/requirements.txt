@@ -1,0 +1,5 @@
+jsondiff==2.0.0
+psycopg2_binary==2.9.7
+pymongo==4.4.0
+Requests==2.31.0
+setuptools==68.0.0

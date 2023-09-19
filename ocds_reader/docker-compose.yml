@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:6.0.2
+    command: [--auth]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ocdsreader
+      MONGO_INITDB_ROOT_PASSWORD: ocdsreaderpass
+    ports:
+      - 27017:27017
+    volumes:
+      - "~/containers/databases/mongo/data:/data/db"
+  postgresql: # use as hostname in pgadmin4 connection 
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - DATABASE_HOST=localhost
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ojo_seco  
+    ports:
+      - '5432:5432'
+    volumes: 
+      - "~/containers/databases/postgresql/data:/data/db/"
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+      # - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  pgadmin-compose:
+        image: dpage/pgadmin4
+        environment: 
+            PGADMIN_DEFAULT_EMAIL: "test@gmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "123123"
+        ports: 
+            - "16543:80"
+        depends_on: 
+            - postgresql
+volumes:
+  mongodb:
+  postgresql:
+    driver: local
